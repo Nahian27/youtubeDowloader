@@ -1,13 +1,30 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Net;
 using youtubeDowloader.Models;
 using YoutubeExplode;
 using YoutubeExplode.Videos.Streams;
 
 namespace youtubeDowloader.Controllers
 {
-    public class HomeController(YoutubeClient youtube) : Controller
+    public class HomeController : Controller
     {
+        private readonly YoutubeClient youtube;
+
+        public HomeController()
+        {
+            var handler = new HttpClientHandler
+            {
+                UseCookies = true,
+                CookieContainer = new CookieContainer()
+            };
+
+            // Add any required cookies
+            handler.CookieContainer.Add(new Uri("https://youtube.com"), new Cookie("CONSENT", "YES+1"));
+
+            var client = new HttpClient(handler);
+            youtube = new YoutubeClient(client);
+        }
         public IActionResult Index()
         {
             return View();
