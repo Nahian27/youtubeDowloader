@@ -20,7 +20,7 @@ namespace youtubeDowloader.Controllers
             };
 
             // Add any required cookies
-            handler.CookieContainer.Add(new Uri("https://youtube.com"), new Cookie("CONSENT", "YES+1"));
+            handler.CookieContainer.Add(new Uri("https://www.youtube.com"), new Cookie("CONSENT", "YES+1"));
 
             var client = new HttpClient(handler);
             youtube = new YoutubeClient(client);
@@ -33,7 +33,6 @@ namespace youtubeDowloader.Controllers
         [HttpGet("details")]
         public async Task<IActionResult> Details(string url)
         {
-            var video = await youtube.Videos.GetAsync(url);
             var manifest = await youtube.Videos.Streams.GetManifestAsync(url);
             var videoStreams = manifest.GetVideoStreams().Select(s => new StreamInfo
             {
@@ -50,6 +49,7 @@ namespace youtubeDowloader.Controllers
                 Url = s.Url
             }).ToList();
 
+            var video = await youtube.Videos.GetAsync(url);
             var videoInfo = new YoutubeVideo
             {
                 Title = video.Title,
