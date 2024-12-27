@@ -1,0 +1,34 @@
+﻿@{
+	ViewData["Title"] = "Details Page";
+}
+@model YoutubeVideo
+<div class="text-center">
+	<h1 class="display-4">Video Details</h1>
+	<img src="@Model.Thumbnail" class="img-fluid">
+	<h3>@Model.Title</h3>
+	<p>Channel: @Model.Author</p>
+	<p>Duration: @Model.Duration</p>
+
+	<h6 class="mt-4">Download Options:</h6>
+	<form asp-controller="Home" asp-action="Download" method="get">
+		<input type="hidden" name="url" value="@Model.Url">
+		<select name="quality" class="form-select" aria-label="Default select example" required>
+			<option selected>Select Video Quality</option>
+			@foreach (var stream in Model.VideoStreams)
+			{
+				<option value="@stream.Quality">@stream.Quality (.@stream.Container) (@stream.FileSize.ToString("F2") MB)
+				</option>
+			}
+		</select>
+		<select class="form-select" aria-label="Default select example" required>
+			<option selected>Select Audio Quality</option>
+			@foreach (var stream in Model.AudioStreams)
+			{
+				<option value="@stream.Quality">@stream.Quality (.@stream.Container) (@stream.FileSize.ToString("F2") MB)
+				</option>
+			}
+		</select>
+		<input type="submit" value="Download video">
+	</form>
+
+</div>
